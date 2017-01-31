@@ -1,17 +1,17 @@
 package goetcd
 
 import (
-"log"
-"time"
+	"log"
+	"time"
 
-"golang.org/x/net/context"
-"github.com/coreos/etcd/client"
+	"golang.org/x/net/context"
+	"github.com/coreos/etcd/client"
 )
 
 var kapi client.KeysAPI
 
-func SetKey(route string, value string) (error) {
-	resp, err := kapi.Set(context.Background(), route, value, nil)
+func SetKeyWithOptions(route string, value string, options client.SetOptions) (error) {
+	resp, err := kapi.Set(context.Background(), route, value, &options)
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -19,6 +19,20 @@ func SetKey(route string, value string) (error) {
 		log.Printf("Set is done. Metadata is %q\n", resp)
 		return nil
 	}
+}
+// TODO временное решение
+func SetKeyWithTtl(route string, value string, ttl int) (error) {
+	options := client.SetOptions{}
+
+	if ttl != 0 {
+		options = client.SetOptions{TTL: time.Duration(ttl) * time.Second}
+	}
+	return SetKeyWithOptions(route, value, options)
+}
+// TODO временное решение
+func SetKey(route string, value string) (error) {
+	options := client.SetOptions{}
+	return SetKeyWithOptions(route, value, options)
 }
 
 func GetKey(route string) (string, error) {
