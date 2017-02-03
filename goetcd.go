@@ -11,12 +11,12 @@ import (
 var kapi client.KeysAPI
 
 func SetKeyWithOptions(route string, value string, options client.SetOptions) (error) {
-	resp, err := kapi.Set(context.Background(), route, value, &options)
+	_, err := kapi.Set(context.Background(), route, value, &options)
 	if err != nil {
 		log.Fatal(err)
 		return err
 	} else {
-		log.Printf("Set is done. Metadata is %q\n", resp)
+		//log.Printf("Set is done. Metadata is %q\n", resp)
 		return nil
 	}
 }
